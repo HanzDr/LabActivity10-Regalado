@@ -86,7 +86,3 @@ App\Models\Post::where('is_pinned', true)->first()->published_at->format('Y-m-d'
 ```
 
 The ActiveRecord screenshot showing `find()`, a title change, and `save()` is in [docs/tinker.png](docs/tinker.png).
-
-## Submission
-
-The repository name is `LabActivity10-Regalado`. Include the source files, dependency lockfiles, and Tinker screenshot. The Git ignore files exclude `.env`, `vendor/`, `node_modules/`, generated assets, and SQLite database files.
