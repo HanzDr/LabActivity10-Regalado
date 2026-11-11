@@ -1,59 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Barangay Bulletin – Purok Regalado
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Lab Activity 10: Eloquent, Migrations, and Seeding
 
-## About Laravel
+Derren Hanz Regalado
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A Laravel 12 bulletin board for Barangay Matina Crossing in Davao City. Residents can browse published announcements, search by title, filter by category, and open individual posts.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Personalized details
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Posts per page:** 8, because Regalado has eight letters.
+- **Categories:** Announcement, Health, Peace & Order, Ayuda, and Community Events.
+- **Custom category:** Community Events.
+- **Personalized author:** Kagawad Derren Hanz Regalado (`kagawad.regalado@bulletin.test`), created with `Author::create()`.
+- **Pinned post:** Purok Regalado Clean-up Drive, created with `Post::create()` and assigned to the personalized Kagawad.
+- **Birthday post date:** December 3, 2026, at 15:00 (`2026-12-03 15:00:00`). The lab uses my birthday's month and day with the year set to 2026.
 
-## Learning Laravel
+## Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- SQLite database with authors and posts tables, plus a separate reversible migration for the post view counter.
+- Eloquent models with explicit fillable fields and casts for publication flags and dates.
+- Faker factories, including a `draft()` state for unpublished posts.
+- Published posts listed with pinned posts first, followed by the latest publication dates.
+- Optional title search (`?q=`) and category filter (`?category=`).
+- Eight posts per page, with search and category values preserved in pagination links.
+- Individual post pages that save an increased view count. Draft and missing posts return 404.
+- Responsive Blade views styled with Tailwind CSS v4 through `@tailwindcss/vite`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requirements
 
-## Laravel Sponsors
+- PHP 8.2 or newer with PDO SQLite enabled
+- Composer
+- Node.js and npm compatible with Vite 7
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Run locally
 
-### Premium Partners
+Open a terminal in `LabActivity10-Regalado`. For a fresh checkout, install the PHP dependencies and create the environment file:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```powershell
+composer install
+cp .env.example .env
+php artisan key:generate
+```
 
-## Contributing
+On Windows PowerShell, `cp` is an alias for `Copy-Item`. Skip copying `.env` if you already have a configured local environment.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Keep `DB_CONNECTION=sqlite` in `.env` and leave `DB_DATABASE` commented out. Create the SQLite file if it does not exist:
 
-## Code of Conduct
+```powershell
+if (-not (Test-Path database/database.sqlite)) {
+    New-Item database/database.sqlite -ItemType File | Out-Null
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Build the database and install the frontend dependencies:
 
-## Security Vulnerabilities
+```powershell
+php artisan migrate:fresh --seed
+npm install
+npm run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+`migrate:fresh --seed` deletes existing tables and recreates the sample data. Leave the Vite terminal running. In a second terminal, open the same project folder and start Laravel:
 
-## License
+```powershell
+php artisan serve
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Visit **http://127.0.0.1:8000/posts**. The home route redirects to this page.
+
+## Verify the sample data
+
+A fresh seed creates **5 authors** and **51 posts**: 40 generated published posts, 10 drafts, and 1 personalized published pinned post. That gives 41 published posts in total.
+
+```powershell
+php artisan tinker
+```
+
+Run these commands inside Tinker:
+
+```php
+App\Models\Author::count(); // 5
+App\Models\Post::count(); // 51
+App\Models\Post::where('is_published', false)->count(); // 10
+App\Models\Post::where('is_pinned', true)->first()->published_at->format('Y-m-d'); // 2026-12-03
+```
+
+The ActiveRecord screenshot showing `find()`, a title change, and `save()` is in [docs/tinker.png](docs/tinker.png).
+
+## Submission
+
+The repository name is `LabActivity10-Regalado`. Include the source files, dependency lockfiles, and Tinker screenshot. The Git ignore files exclude `.env`, `vendor/`, `node_modules/`, generated assets, and SQLite database files.
