@@ -41,7 +41,7 @@ class PostSeeder extends Seeder
                 . 'Let us work together to keep our purok clean.',
             'is_published' => true,
             'is_pinned' => true,
-            'published_at' => '2003-12-03 15:00:00',
+            'published_at' => '2026-12-03 15:00:00',
             'views' => 0,
         ]);
     }
