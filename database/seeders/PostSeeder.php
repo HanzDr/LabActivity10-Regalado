@@ -12,14 +12,14 @@ class PostSeeder extends Seeder
     {
         $authors = Author::all();
 
-        // Create 40 published posts using existing authors.
+      
         Post::factory()->count(40)
             ->sequence(fn ($seq) => [
                 'author_id' => $authors->random()->id,
             ])
             ->create();
 
-        // Create 10 draft posts using existing authors.
+      
         Post::factory()->count(10)->draft()
             ->sequence(fn ($seq) => [
                 'author_id' => $authors->random()->id,
@@ -31,7 +31,7 @@ class PostSeeder extends Seeder
             'kagawad.regalado@bulletin.test'
         )->firstOrFail();
 
-        // Create your personalized pinned post.
+  
         Post::create([
             'author_id' => $kagawad->id,
             'title' => 'Purok Regalado Clean-up Drive',
